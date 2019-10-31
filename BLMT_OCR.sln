@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLMT_OCR", "BLMT_OCR\BLMT_OCR.csproj", "{FB6D5A85-EDE1-414C-9548-7E022E754197}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{7DB08500-99D4-436B-8F0D-7B3708A22666}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLMT_SCAN", "BLMT_SCAN\BLMT_SCAN.csproj", "{E780DC94-A3A6-4F85-8910-9B7DA5EC410D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB6D5A85-EDE1-414C-9548-7E022E754197}.Debug|x86.ActiveCfg = Debug|x86
+		{FB6D5A85-EDE1-414C-9548-7E022E754197}.Debug|x86.Build.0 = Debug|x86
+		{FB6D5A85-EDE1-414C-9548-7E022E754197}.Release|x86.ActiveCfg = Release|x86
+		{FB6D5A85-EDE1-414C-9548-7E022E754197}.Release|x86.Build.0 = Release|x86
+		{7DB08500-99D4-436B-8F0D-7B3708A22666}.Debug|x86.ActiveCfg = Debug
+		{7DB08500-99D4-436B-8F0D-7B3708A22666}.Release|x86.ActiveCfg = Release
+		{E780DC94-A3A6-4F85-8910-9B7DA5EC410D}.Debug|x86.ActiveCfg = Debug|x86
+		{E780DC94-A3A6-4F85-8910-9B7DA5EC410D}.Debug|x86.Build.0 = Debug|x86
+		{E780DC94-A3A6-4F85-8910-9B7DA5EC410D}.Release|x86.ActiveCfg = Release|x86
+		{E780DC94-A3A6-4F85-8910-9B7DA5EC410D}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
