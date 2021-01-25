@@ -52,13 +52,13 @@
             this.lblCnt = new System.Windows.Forms.Label();
             this.btnHold = new System.Windows.Forms.Button();
             this.txtMemo = new System.Windows.Forms.TextBox();
+            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             this.gcMultiRow3 = new GrapeCity.Win.MultiRow.GcMultiRow();
             this.template31 = new BLMT_OCR.OCR.Template3();
             this.gcMultiRow2 = new GrapeCity.Win.MultiRow.GcMultiRow();
             this.template21 = new BLMT_OCR.OCR.Template2();
             this.gcMultiRow1 = new GrapeCity.Win.MultiRow.GcMultiRow();
             this.template12 = new BLMT_OCR.OCR.Template1();
-            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -221,7 +221,7 @@
             // 
             this.checkBox1.AutoSize = true;
             this.checkBox1.Font = new System.Drawing.Font("ＭＳ ゴシック", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.checkBox1.Location = new System.Drawing.Point(1016, 458);
+            this.checkBox1.Location = new System.Drawing.Point(1016, 487);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(75, 20);
             this.checkBox1.TabIndex = 5;
@@ -284,7 +284,7 @@
             // lblCnt
             // 
             this.lblCnt.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblCnt.Location = new System.Drawing.Point(1144, 456);
+            this.lblCnt.Location = new System.Drawing.Point(1144, 485);
             this.lblCnt.Name = "lblCnt";
             this.lblCnt.Size = new System.Drawing.Size(93, 25);
             this.lblCnt.TabIndex = 303;
@@ -309,11 +309,15 @@
             this.txtMemo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMemo.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtMemo.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtMemo.Location = new System.Drawing.Point(1008, 347);
+            this.txtMemo.Location = new System.Drawing.Point(1008, 376);
             this.txtMemo.Multiline = true;
             this.txtMemo.Name = "txtMemo";
             this.txtMemo.Size = new System.Drawing.Size(228, 87);
             this.txtMemo.TabIndex = 4;
+            // 
+            // printDocument1
+            // 
+            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
             // 
             // gcMultiRow3
             // 
@@ -326,7 +330,7 @@
             this.gcMultiRow3.Location = new System.Drawing.Point(1009, 50);
             this.gcMultiRow3.Name = "gcMultiRow3";
             this.gcMultiRow3.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.gcMultiRow3.Size = new System.Drawing.Size(228, 288);
+            this.gcMultiRow3.Size = new System.Drawing.Size(228, 307);
             this.gcMultiRow3.TabIndex = 3;
             this.gcMultiRow3.Template = this.template31;
             this.gcMultiRow3.Text = "gcMultiRow3";
@@ -373,10 +377,6 @@
             this.gcMultiRow1.EditingControlShowing += new System.EventHandler<GrapeCity.Win.MultiRow.EditingControlShowingEventArgs>(this.gcMultiRow1_EditingControlShowing);
             this.gcMultiRow1.CellContentClick += new System.EventHandler<GrapeCity.Win.MultiRow.CellEventArgs>(this.gcMultiRow1_CellContentClick);
             this.gcMultiRow1.CurrentCellDirtyStateChanged += new System.EventHandler(this.gcMultiRow1_CurrentCellDirtyStateChanged);
-            // 
-            // printDocument1
-            // 
-            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
             // 
             // frmCorrect
             // 

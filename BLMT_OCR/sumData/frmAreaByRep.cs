@@ -134,6 +134,7 @@ namespace BLMT_OCR.sumData
         string colYear = "c27";
         string colMonth = "c28";
         string colAreaMana = "c29";
+        string colTokuDay = "c30";      // 特休日数 2020/05/12
 
         /// <summary>
         /// データグリッドビューの定義を行います
@@ -185,6 +186,7 @@ namespace BLMT_OCR.sumData
                 tempDGV.Columns.Add(colTlDay, "要出勤日数");
                 tempDGV.Columns.Add(colWDay, "実労日数");
                 tempDGV.Columns.Add(colYuDay, "有給日数");
+                tempDGV.Columns.Add(colTokuDay, "特休日数");    // 2020/05/12
                 tempDGV.Columns.Add(colKDay, "公休日数");
                 tempDGV.Columns.Add(colChisou, "遅早時間");
                 tempDGV.Columns.Add(colWTime, "実労働時間");
@@ -208,6 +210,7 @@ namespace BLMT_OCR.sumData
                 tempDGV.Columns[colTlDay].Width = 90;
                 tempDGV.Columns[colWDay].Width = 90;
                 tempDGV.Columns[colYuDay].Width = 90;
+                tempDGV.Columns[colTokuDay].Width = 90;     // 2020/05/12
                 tempDGV.Columns[colKDay].Width = 90;
                 tempDGV.Columns[colChisou].Width = 90;
                 tempDGV.Columns[colWTime].Width = 90;
@@ -230,6 +233,7 @@ namespace BLMT_OCR.sumData
                 tempDGV.Columns[colWDay].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colTlDay].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colYuDay].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                tempDGV.Columns[colTokuDay].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;     // 特休日数 2020/05/12
                 tempDGV.Columns[colKDay].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colChisou].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 tempDGV.Columns[colWTime].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -337,6 +341,17 @@ namespace BLMT_OCR.sumData
                     g[colTlDay, g.Rows.Count - 1].Value = t.要出勤日数;
                     g[colWDay, g.Rows.Count - 1].Value = t.実労日数;
                     g[colYuDay, g.Rows.Count - 1].Value = t.有休日数;
+
+                    // 2020/05/12
+                    if (t.Is特休日数Null())
+                    {
+                        g[colTokuDay, g.Rows.Count - 1].Value = global.FLGOFF;
+                    }
+                    else
+                    {
+                        g[colTokuDay, g.Rows.Count - 1].Value = t.特休日数;
+                    }
+                    
                     g[colKDay, g.Rows.Count - 1].Value = t.公休日数;
                     g[colChisou, g.Rows.Count - 1].Value = string.Format("{0, 3}", t.遅早時間時) + ":" + t.遅早時間分.ToString("D2");
                     g[colWTime, g.Rows.Count - 1].Value = string.Format("{0, 3}", t.実労働時間時) + ":" + t.実労働時間分.ToString("D2");

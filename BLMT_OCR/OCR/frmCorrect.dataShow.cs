@@ -228,13 +228,27 @@ namespace BLMT_OCR.OCR
             gcMultiRow3[0, "txtZdays"].Style.BackColor = Color.Empty;
             gcMultiRow3[0, "txtChisou"].Style.BackColor = Color.Empty;
             gcMultiRow3[0, "txtChisou2"].Style.BackColor = Color.Empty;
+            gcMultiRow3[0, "txtTokuDays"].Style.BackColor = Color.Empty;    // 特休日数：2020/05/12
 
             gl.ChangeValueStatus = false;   // チェンジバリューステータス
 
             gcMultiRow3.SetValue(0, "txtKdays", r.公休日数);
             gcMultiRow3.SetValue(0, "txtYuDays", r.有休日数);
             gcMultiRow3.SetValue(0, "txtZdays", r.実労日数);
-            gcMultiRow3.SetValue(0, "txtTlDays", r.実労日数 + r.有休日数);
+
+            // 2020/05/12
+            if (r.Is特休日数Null())
+            {
+                gcMultiRow3.SetValue(0, "txtTlDays", r.実労日数 + r.有休日数);
+                gcMultiRow3.SetValue(0, "txtTokuDays", global.FLGOFF);
+            }
+            else
+            {
+                // 特休日数を含める 2020/05/12
+                gcMultiRow3.SetValue(0, "txtTlDays", r.実労日数 + r.有休日数 + r.特休日数);
+                gcMultiRow3.SetValue(0, "txtTokuDays", r.特休日数);
+            }
+
             gcMultiRow3.SetValue(0, "txtChisou", r.遅早時間時);
             gcMultiRow3.SetValue(0, "txtChisou2", r.遅早時間分.ToString("D2"));
             gcMultiRow3.SetValue(0, "txtKotuhi", r.交通費);
@@ -1255,6 +1269,15 @@ namespace BLMT_OCR.OCR
                 gcMultiRow3.BeginEdit(true);
             }
 
+            // 合計日数 : 2020/05/12
+            if (ocr._errNumber == ocr.eTotalDays)
+            {
+                gcMultiRow3[ocr._errRow, "txtTlDays"].Style.BackColor = Color.Yellow;
+                gcMultiRow3.Focus();
+                gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtTlDays"];
+                gcMultiRow3.BeginEdit(true);
+            }
+
             //  有給日数
             if (ocr._errNumber == ocr.eYukyuDays)
             {
@@ -1273,7 +1296,16 @@ namespace BLMT_OCR.OCR
                 gcMultiRow3.BeginEdit(true);
             }
 
-            //  公休日数
+            //  特休日数 : 2020/05/12
+            if (ocr._errNumber == ocr.eTokukyuDays)
+            {
+                gcMultiRow3[ocr._errRow, "txtTokuDays"].Style.BackColor = Color.Yellow;
+                gcMultiRow3.Focus();
+                gcMultiRow3.CurrentCell = gcMultiRow3[ocr._errRow, "txtTokuDays"];
+                gcMultiRow3.BeginEdit(true);
+            }
+
+            //  遅刻早退
             if (ocr._errNumber == ocr.eChisou)
             {
                 gcMultiRow3[ocr._errRow, "txtChisou2"].Style.BackColor = Color.Yellow;
@@ -1331,6 +1363,11 @@ namespace BLMT_OCR.OCR
                     {
                         wTotal += pKihon;
                     }
+                    //else if (sStf.給与区分.ToString() == global.NIKKYU)
+                    //{
+                    //    // 日給者も基本労働時間を労働時間に加算：2020/05/14
+                    //    wTotal += pKihon;
+                    //}
 
                     continue;
                 }

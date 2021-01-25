@@ -449,6 +449,7 @@ namespace BLMT_OCR.OCR
                 r.実労日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtZdays"].Value));
                 r.公休日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtKdays"].Value));
                 r.有休日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtYuDays"].Value));
+                r.特休日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtTokuDays"].Value));  // 2020/05/12 
 
                 r.遅早時間時 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtChisou"].Value));
                 r.遅早時間分 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtChisou2"].Value));
@@ -1596,7 +1597,7 @@ namespace BLMT_OCR.OCR
                 //イベントハンドラが複数回追加されてしまうので最初に削除する
                 e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
 
-                // 数字のみ入力可能とする
+                // 数字のみ入力可能とする : 特休日数を含める 2020/05/12
                 if (gcMultiRow3.CurrentCell.Name == "txtZdays" || gcMultiRow3.CurrentCell.Name == "txtKdays" ||
                     gcMultiRow3.CurrentCell.Name == "txtTlDays" || gcMultiRow3.CurrentCell.Name == "txtYuDays" ||
                     gcMultiRow3.CurrentCell.Name == "txtWorkTime" || gcMultiRow3.CurrentCell.Name == "txtWorkTime2" ||
@@ -1606,7 +1607,8 @@ namespace BLMT_OCR.OCR
                     gcMultiRow3.CurrentCell.Name == "txtHolZan" || gcMultiRow3.CurrentCell.Name == "txtHolZan2" || 
                     gcMultiRow3.CurrentCell.Name == "txtChisou" || gcMultiRow3.CurrentCell.Name == "txtChisou2" || 
                     gcMultiRow3.CurrentCell.Name == "txtSonota" || gcMultiRow3.CurrentCell.Name == "txtSonota2" || 
-                    gcMultiRow3.CurrentCell.Name == "txtKotuhi" || gcMultiRow3.CurrentCell.Name == "txtKotuhi2")
+                    gcMultiRow3.CurrentCell.Name == "txtKotuhi" || gcMultiRow3.CurrentCell.Name == "txtKotuhi2" ||
+                    gcMultiRow3.CurrentCell.Name == "txtTokuDays")
                 {
                     //イベントハンドラを追加する
                     e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
@@ -1770,11 +1772,15 @@ namespace BLMT_OCR.OCR
 
             if (e.RowIndex < 0) return;
 
-            if (e.CellName == "txtZdays" || e.CellName == "txtKdays" || e.CellName == "txtYuDays")
+            // 特休日数を含める：2020/05/12
+            if (e.CellName == "txtZdays" || e.CellName == "txtKdays" || e.CellName == "txtYuDays" || e.CellName == "txtTokuDays")
             {
                 // 
                 int tDays = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtZdays"].Value)) +
                             Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtYuDays"].Value));
+
+                // 特休日数を含める：2020/05/12
+                tDays += Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtTokuDays"].Value));
 
                 gcMultiRow3.SetValue(0, "txtTlDays", tDays);
             }

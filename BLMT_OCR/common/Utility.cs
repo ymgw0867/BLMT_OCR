@@ -1190,5 +1190,19 @@ namespace BLMT_OCR.common
                 i++;
             }
         }
+        
+        public static OleDbConnection dbConnect()
+        {
+            // データベース接続文字列
+            OleDbConnection Cn = new OleDbConnection();
+            StringBuilder sb = new StringBuilder();
+            sb.Clear();
+            sb.Append("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=");
+            sb.Append(Properties.Settings.Default.mdbPath + global.MDBFILE);
+            Cn.ConnectionString = sb.ToString();
+            Cn.Open();
+
+            return Cn;
+        }
     }
 }

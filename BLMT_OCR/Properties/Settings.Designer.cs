@@ -117,7 +117,7 @@ namespace BLMT_OCR.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files (x86)\\FRP\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\WinReaderHandS\\")]
         public string wrHands_Path {
             get {
                 return ((string)(this["wrHands_Path"]));

@@ -155,10 +155,10 @@
             this.txtMemo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtMemo.Font = new System.Drawing.Font("ＭＳ ゴシック", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.txtMemo.ImeMode = System.Windows.Forms.ImeMode.Hiragana;
-            this.txtMemo.Location = new System.Drawing.Point(1009, 324);
+            this.txtMemo.Location = new System.Drawing.Point(1009, 372);
             this.txtMemo.Multiline = true;
             this.txtMemo.Name = "txtMemo";
-            this.txtMemo.Size = new System.Drawing.Size(228, 126);
+            this.txtMemo.Size = new System.Drawing.Size(228, 78);
             this.txtMemo.TabIndex = 4;
             // 
             // button2
@@ -225,7 +225,7 @@
             this.gcMultiRow3.Location = new System.Drawing.Point(1009, 50);
             this.gcMultiRow3.Name = "gcMultiRow3";
             this.gcMultiRow3.ScrollBars = System.Windows.Forms.ScrollBars.None;
-            this.gcMultiRow3.Size = new System.Drawing.Size(228, 268);
+            this.gcMultiRow3.Size = new System.Drawing.Size(228, 307);
             this.gcMultiRow3.TabIndex = 3;
             this.gcMultiRow3.Template = this.template31;
             this.gcMultiRow3.Text = "gcMultiRow3";

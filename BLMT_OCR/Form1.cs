@@ -14,6 +14,7 @@ using Leadtools.Codecs;
 using Leadtools.ImageProcessing;
 using Leadtools.ImageProcessing.Core;
 using BLMT_OCR.common;
+using System.Data.OleDb;
 
 namespace BLMT_OCR
 {
@@ -42,6 +43,54 @@ namespace BLMT_OCR
         {
             Utility.WindowsMaxSize(this, this.Width, this.Height);
             Utility.WindowsMinSize(this, this.Width, this.Height);
+
+            /* 過去勤務票ヘッダ、勤務票ヘッダ、保留勤務票ヘッダ各テーブルに
+            「特休日数」フィールドを追加 2020/05/12 */
+            mdbAlter();
+
+
+            // キャプションにバージョンを追加
+            this.Text += "   ver " + Application.ProductVersion;
+        }
+        
+        ///---------------------------------------------------------------------
+        /// <summary>
+        ///     2020/05/12 ローカルMDB 
+        ///     過去勤務票ヘッダ、勤務票ヘッダ、保留勤務票ヘッダ各テーブルに
+        ///     「特休日数」フィールドを追加 </summary>
+        ///--------------------------------------------------------------------- 
+        private void mdbAlter()
+        {
+            try
+            {
+                // ローカルデータベース接続
+                OleDbCommand sCom = new OleDbCommand();
+                sCom.Connection = Utility.dbConnect();
+
+                string sqlSTRING = string.Empty;
+
+                // 過去勤務票ヘッダテーブルに「特休日数」フィールドを追加する : 2020/05/12
+                sqlSTRING = "ALTER TABLE 過去勤務票ヘッダ ADD COLUMN 特休日数 int";
+                sCom.CommandText = sqlSTRING;
+                sCom.ExecuteNonQuery();
+
+                // 勤務票ヘッダテーブルに「特休日数」フィールドを追加する : 2020/05/12
+                sqlSTRING = "ALTER TABLE 勤務票ヘッダ ADD COLUMN 特休日数 int";
+                sCom.CommandText = sqlSTRING;
+                sCom.ExecuteNonQuery();
+
+                // 保留勤務票ヘッダテーブルに「特休日数」フィールドを追加する : 2020/05/12
+                sqlSTRING = "ALTER TABLE 保留勤務票ヘッダ ADD COLUMN 特休日数 int";
+                sCom.CommandText = sqlSTRING;
+                sCom.ExecuteNonQuery();
+
+                sCom.Connection.Close();
+            }
+            catch (Exception)
+            {
+                
+                //throw;
+            }
         }
 
         private void btnPrePrint_Click(object sender, EventArgs e)

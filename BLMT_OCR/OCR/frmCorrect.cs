@@ -499,6 +499,7 @@ namespace BLMT_OCR.OCR
                 r.実労日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtZdays"].Value));
                 r.公休日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtKdays"].Value));
                 r.有休日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtYuDays"].Value));
+                r.特休日数 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtTokuDays"].Value));  // 特休日数：2020/05/12
 
                 r.遅早時間時 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtChisou"].Value));
                 r.遅早時間分 = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtChisou2"].Value));
@@ -1896,7 +1897,21 @@ namespace BLMT_OCR.OCR
                     }
 
                     // 合計
-                    rtnArray[5, 11] = t.実労日数 + t.有休日数;
+
+                    // 2020/05/18
+                    if (t.Is特休日数Null())
+                    {
+                        rtnArray[5, 11] = t.実労日数 + t.有休日数;
+                        rtnArray[16, 11] = global.FLGOFF;
+                    }
+                    else
+                    {
+                        rtnArray[5, 11] = t.実労日数 + t.有休日数 + t.特休日数;
+                        rtnArray[16, 11] = t.特休日数;
+                    }
+
+                    //rtnArray[5, 11] = t.実労日数 + t.有休日数 + t.特休日数;
+
                     rtnArray[6, 11] = t.実労日数;
                     rtnArray[7, 11] = t.公休日数;
                     rtnArray[8, 11] = t.有休日数;
@@ -1918,7 +1933,7 @@ namespace BLMT_OCR.OCR
                     rtnArray[13, 11] = string.Format("{0, 3}", (int)(_w22Time / 60) + ":" + ((int)(_w22Time % 60)).ToString("D2"));
                     rtnArray[14, 11] = string.Format("{0, 3}", (int)(_doniShuku / 60) + ":" + ((int)(_doniShuku % 60)).ToString("D2"));
                     rtnArray[15, 11] = string.Format("{0, 3}", t.遅早時間時 + ":" + t.遅早時間分.ToString("D2"));
-
+                    
                     rtnArray[37, 4] = t.交通費.ToString("#,##0");
                     rtnArray[38, 4] = t.その他支給.ToString("#,##0");
                     //rtnArray[37, 7] = txtMemo.Text.Replace("\r\n", " "); 
@@ -2948,7 +2963,7 @@ namespace BLMT_OCR.OCR
                 //イベントハンドラが複数回追加されてしまうので最初に削除する
                 e.Control.KeyPress -= new KeyPressEventHandler(Control_KeyPress);
 
-                // 数字のみ入力可能とする
+                // 数字のみ入力可能とする：特休日数を含める 2020/05/12
                 if (gcMultiRow3.CurrentCell.Name == "txtZdays" || gcMultiRow3.CurrentCell.Name == "txtKdays" ||
                     gcMultiRow3.CurrentCell.Name == "txtTlDays" || gcMultiRow3.CurrentCell.Name == "txtYuDays" ||
                     gcMultiRow3.CurrentCell.Name == "txtWorkTime" || gcMultiRow3.CurrentCell.Name == "txtWorkTime2" ||
@@ -2958,7 +2973,8 @@ namespace BLMT_OCR.OCR
                     gcMultiRow3.CurrentCell.Name == "txtHolZan" || gcMultiRow3.CurrentCell.Name == "txtHolZan2" || 
                     gcMultiRow3.CurrentCell.Name == "txtChisou" || gcMultiRow3.CurrentCell.Name == "txtChisou2" || 
                     gcMultiRow3.CurrentCell.Name == "txtSonota" || gcMultiRow3.CurrentCell.Name == "txtSonota2" || 
-                    gcMultiRow3.CurrentCell.Name == "txtKotuhi" || gcMultiRow3.CurrentCell.Name == "txtKotuhi2")
+                    gcMultiRow3.CurrentCell.Name == "txtKotuhi" || gcMultiRow3.CurrentCell.Name == "txtKotuhi2" ||
+                    gcMultiRow3.CurrentCell.Name == "txtTokuDays")
                 {
                     //イベントハンドラを追加する
                     e.Control.KeyPress += new KeyPressEventHandler(Control_KeyPress);
@@ -2972,10 +2988,6 @@ namespace BLMT_OCR.OCR
             {
                 gcMultiRow3.BeginEdit(true);
             }
-        }
-
-        private void gcMultiRow1_CellLeave_1(object sender, CellEventArgs e)
-        {
         }
 
         private void btnRtn_Click_1(object sender, EventArgs e)
@@ -3066,11 +3078,15 @@ namespace BLMT_OCR.OCR
 
             if (e.RowIndex < 0) return;
 
-            if (e.CellName == "txtZdays" || e.CellName == "txtKdays" || e.CellName == "txtYuDays")
+            // 特休日数を含める：2020/05/12
+            if (e.CellName == "txtZdays" || e.CellName == "txtKdays" || e.CellName == "txtYuDays" || e.CellName == "txtTokuDays")
             {
                 // 
                 int tDays = Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtZdays"].Value)) +
                             Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtYuDays"].Value));
+
+                // 特休日数を含める：2020/05/12
+                tDays += Utility.StrtoInt(Utility.NulltoStr(gcMultiRow3[0, "txtTokuDays"].Value));
 
                 gcMultiRow3.SetValue(0, "txtTlDays", tDays);
             }
@@ -3190,6 +3206,7 @@ namespace BLMT_OCR.OCR
                 hr.訂正31 = t.訂正31;
                 hr.基本実労働時 = t.基本実労働時;
                 hr.基本実労働分 = t.基本実労働分;
+                hr.特休日数 = t.特休日数;   // 2020/05/12
                 
                 // 保留データ追加処理
                 dts.保留勤務票ヘッダ.Add保留勤務票ヘッダRow(hr);

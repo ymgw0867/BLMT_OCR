@@ -133,12 +133,20 @@ namespace BLMT_OCR.common
         public int eWorkDays = 20;
 
         /// <summary> 
+        ///     エラー項目 = 合計日数：2020/05/12 </summary>
+        public int eTotalDays = 37;
+
+        /// <summary> 
         ///     エラー項目 = 有給日数 </summary>
         public int eYukyuDays = 21;
 
         /// <summary> 
-        ///     エラー項目 = 公休日数 </summary>
+        ///     エラー項目 = 公休日数  </summary>
         public int eKoukyuDays = 22;
+
+        /// <summary> 
+        ///     エラー項目 = 特休日数：2020/05/12  </summary>
+        public int eTokukyuDays = 36;
 
         /// <summary> 
         ///     エラー項目 = ライン </summary>
@@ -558,7 +566,9 @@ namespace BLMT_OCR.common
                 // 出勤状況：時給者のとき
                 if (r.給与形態.ToString() == global.JIKKYU)
                 {
-                    if (m.出勤状況 != string.Empty && m.出勤状況 != global.STATUS_YUKYU && m.出勤状況 != global.STATUS_KOUKYU)
+                    // 特休「５」を条件追加：2020/05/12
+                    if (m.出勤状況 != string.Empty && m.出勤状況 != global.STATUS_YUKYU && m.出勤状況 != global.STATUS_KOUKYU &&
+                        m.出勤状況 != global.STATUS_TOKUKYU_202005)
                     {
                         setErrStatus(eShukkinStatus, iX - 1, "出勤状況の記入内容が正しくありません");
                         return false;
@@ -568,11 +578,13 @@ namespace BLMT_OCR.common
                 // 出勤状況
                 if (m.出勤状況 != string.Empty)
                 {
+                    // 特休「５」を条件追加：2020/05/12
                     if (m.出勤状況 != global.STATUS_KIHON_1 &&
                         m.出勤状況 != global.STATUS_KIHON_2 &&
                         m.出勤状況 != global.STATUS_KIHON_3 &&
                         m.出勤状況 != global.STATUS_YUKYU &&
-                        m.出勤状況 != global.STATUS_KOUKYU)
+                        m.出勤状況 != global.STATUS_KOUKYU &&
+                        m.出勤状況 != global.STATUS_TOKUKYU_202005)
                     {
                         setErrStatus(eShukkinStatus, iX - 1, "出勤状況が正しくありません");
                         return false;
@@ -648,6 +660,9 @@ namespace BLMT_OCR.common
 
             // 有給日数チェック
             if (!errCheckYukyuDaysTotal(r, mList)) return false;
+
+            // 特休日数チェック：2020/05/12
+            if (!errCheckTokukyuDaysTotal(r, mList)) return false;
 
             // 要出勤日数チェック
             if (!errCheckTotalDays(r)) return false;
@@ -991,9 +1006,20 @@ namespace BLMT_OCR.common
         ///------------------------------------------------------------------------------------
         private bool errCheckTotalDays(DataSet1.過去勤務票ヘッダRow r)
         {
-            if ((r.有休日数 + r.実労日数) != r.要出勤日数)
+            int toku = 0;
+
+            if (r.Is特休日数Null())
             {
-                setErrStatus(eWorkDays, 0, "合計日数が正しくありません（" + (r.有休日数 + r.実労日数) + "日）");
+                toku = 0;
+            }
+            else
+            {
+                toku = r.特休日数;
+            }
+
+            if ((r.有休日数 + r.実労日数 + toku) != r.要出勤日数)
+            {
+                setErrStatus(eTotalDays, 0, "合計日数が正しくありません（" + (r.有休日数 + r.実労日数 + toku) + "日）");
                 return false;
             }
 
@@ -1046,6 +1072,40 @@ namespace BLMT_OCR.common
             return true;
         }
 
+
+        ///------------------------------------------------------------------------------------
+        /// <summary>
+        ///     特休日数チェック </summary>
+        /// <param name="r">
+        ///     DataSet1.勤務票ヘッダRow</param>
+        /// <param name="mList">
+        ///     List<DataSet1.勤務票明細Row> </param>
+        /// <returns>
+        ///     エラーなし：true, エラーあり：false</returns>
+        ///------------------------------------------------------------------------------------
+        private bool errCheckTokukyuDaysTotal(DataSet1.過去勤務票ヘッダRow r, List<DataSet1.過去勤務票明細Row> mList)
+        {
+            int kdays = mList.Count(a => a.出勤状況 == global.STATUS_TOKUKYU_202005);
+
+            int toku = 0;
+
+            if (r.Is特休日数Null())
+            {
+                toku = 0;
+            }
+            else
+            {
+                toku = r.特休日数;
+            }
+
+            if (kdays != toku)
+            {
+                setErrStatus(eTokukyuDays, 0, "特休日数が正しくありません（" + kdays + "日）");
+                return false;
+            }
+
+            return true;
+        }
         ///----------------------------------------------------------
         /// <summary>
         ///     検索用DepartmentCodeを取得する </summary>
@@ -1244,20 +1304,21 @@ namespace BLMT_OCR.common
                 }
             }
 
-            if (m.出勤状況 == global.STATUS_YUKYU || m.出勤状況 == global.STATUS_KOUKYU)
+            // 特休日数を条件に含める：2020/05/12
+            if (m.出勤状況 == global.STATUS_YUKYU || m.出勤状況 == global.STATUS_KOUKYU || m.出勤状況 == global.STATUS_TOKUKYU_202005)
             {
                 // 公休、有休と出退勤時刻
                 if (m.出勤時 != string.Empty && m.出勤分 != string.Empty &&
                     m.退勤時 != string.Empty && m.退勤分 != string.Empty)
                 {
-                    setErrStatus(eShukkinStatus, iX - 1, "公休または有休で出退勤時刻が記入されています");
+                    setErrStatus(eShukkinStatus, iX - 1, "公休、特休、有休で出退勤時刻が記入されています");
                     return false;
                 }
 
                 // 公休、有休と休憩
                 if (m.休憩 != string.Empty)
                 {
-                    setErrStatus(eRest, iX - 1, "公休または有休で休憩が記入されています");
+                    setErrStatus(eRest, iX - 1, "公休、特休、有休で休憩が記入されています");
                     return false;
                 }
             }
